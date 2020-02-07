@@ -1,4 +1,4 @@
-html {
+body {
   background-color: #E4E9FD;
   background-image: -webkit-linear-gradient(65deg, #A683E3 50%, #E4E9FD 50%);
   min-height: 1000px;
@@ -10,6 +10,26 @@ h1 {
   padding: 10px;
 }
 
+.nav-bar, li, a {
+  color: #777;
+  font-size: 1;
+  text-transform: uppercase;
+  padding: 0 10px;
+}
+
+.nav-bar, li, a:hover {
+  color: #A683E3;
+}
+
+.holdThing {
+  background-image: -webkit-linear-gradient(65deg, #A683E3 50%, #E4E9FD 50%);
+  min-height: 1000px;
+}
+
+.middle-block {
+  margin-top: 8%;
+}
+
 .box {
   max-width: 400px;
   margin: 50px auto;
@@ -19,6 +39,7 @@ h1 {
 }
 
 #heading {
+  margin-top: 8%;
   background-color: #A683E3;
   text-align: center;
 }
@@ -56,6 +77,17 @@ form {
   margin-left: 20px;
 }
 
+.list-p {
+  text-align: center;
+  height: 60px;
+  top: 10px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  font-weight: 200;
+  width: 313px;
+}
+
 button {
   min-height: 50px;
   width: 50px;
@@ -67,6 +99,8 @@ button {
   padding-bottom: 6px;
   border-width: 0;
 }
+
+
 
 input[type="text"] {
   text-align: center;

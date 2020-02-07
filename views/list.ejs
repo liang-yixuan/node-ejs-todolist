@@ -3,32 +3,53 @@
 
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>todo list</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
   <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
-  <div class="box" id="heading">
-    <h1><%= listTitle %></h1>
-  </div>
+  <div class="container-fluid">
+    <nav class="navbar navbar-default navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <a class="navbar-brand" href="/">Todo</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-  <div class="box">
-    <% itemsOfList.forEach(function(item){ %>
-    <form class="" action="/delete" method="post">
-      <div class="item">
-        <input name="listName" type="hidden" value="<%= listTitle %>">
-        <input name= "checkbox" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()">
-        <p name = "todo-item"> <%= item.name %> </p>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item"> <a href="/">Author</a></li>
+          </ul>
+        </div>
       </div>
-    </form>
+    </nav>
 
-    <% }) %>
+    <div class="box" id="heading">
+      <h1><%= listTitle %></h1>
+    </div>
 
-    <form class="item" action="/" method="post">
-      <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
-      <button type="submit" name="list" value="<%= listTitle %>">+</button>
-    </form>
+    <div class="box">
+      <% itemsOfList.forEach(function(item){ %>
+      <form class="" action="/delete" method="post">
+        <div class="item">
+          <input name="listName" type="hidden" value="<%= listTitle %>">
+          <input name= "checkbox" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()">
+          <p name = "todo-item"> <%= item.name %> </p>
+        </div>
+      </form>
+
+      <% }) %>
+
+      <form class="item" action="/" method="post">
+        <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
+        <button type="submit" name="list" value="<%= listTitle %>">+</button>
+      </form>
+    </div>
   </div>
+
 
 </body>
 
