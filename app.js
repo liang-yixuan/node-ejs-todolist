@@ -20,64 +20,56 @@ mongoose.connect("mongodb://localhost:27017/todolistDB", {
   useUnifiedTopology: true
 });
 
+// 总共只需一个collection，每个表有listName(string)，itemList(array);
 const itemSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "null value occurred!"]
   }
 });
-
 const Item = mongoose.model("Item", itemSchema);
 
-
-//
-// const item2 = new Item({
-//   name : "cook food"
-// });
-//
-// const item3 = new Item({
-//   name : "eat food"
-// });
-//
-// const itemArray = [item1, item2, item3];
-
-// Item.insertMany(itemArray, function(err){
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     console.log("Items inserted!");
-//   }
-// });
-
-
-
-let items = [];
-
-
-
-
-// 每次来到home route都会触发一次get，req是客户端请求，res是服务器回应
-app.get("/", function(req, res) {
-  let day = util.getDate();
-  // 每次都要past所有的ejs variable
-  res.render("list", {
-    listTitle: day,
-    itemsOfList: items
-  });
+const listSchema = new mongoose.Schema({
+  listName: {
+    type: String,
+    createIndexes: {
+      unique: true
+    }
+  },
+  itemList: [itemSchema]
 });
-
-const Work = mongoose.model("Work", itemSchema);
-// Work.find(function(err, result){
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       console.log(result);
-//     }
-// });
+const List = mongoose.model("List", listSchema);
 
 
 const defaultItem = new Item({
   name: "Click + to add item"
+});
+let items = [defaultItem];
+
+// 每次来到home route都会触发一次get，req是客户端请求，res是服务器回应
+// 设计home page展示所有的list，点击跳转list page
+app.get("/", function(req, res) {
+  let day = util.getDate();
+  // 每次都要past所有的ejs variable
+  List.find(function(err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      const AllList = new Set();
+      console.log(result);
+      console.log("---------------------------------")
+      result.forEach(function(list) {
+        AllList.add(list.listName);
+      });
+      AllList.forEach(function(list) {
+        console.log(list);
+      })
+      res.render("index", {
+        listTitle: day,
+        itemsOfList: AllList
+      });
+    }
+  });
 });
 
 app.get("/work", function(req, res) {
@@ -104,20 +96,59 @@ app.get("/work", function(req, res) {
   });
 });
 
+app.get("/:CustomListName", function(req, res) {
+  const customListName = req.params.CustomListName;
+  if (customListName != 'favicon.ico') {
+    //
+    List.findOne({listName: customListName}, function(err, result) {
+      if (!err) {
+        if (!result) {
+          const list = new List({
+            listName: customListName,
+            itemList: items
+          });
+          list.save();
+          res.redirect("/" + customListName);
+        } else {
+          items = result.itemList;
+          res.render("list", {
+            listTitle: customListName,
+            itemsOfList: items
+          });
+        }
+      }
+    });
+    //
+  }
+});
 
+const Work = mongoose.model("Work", itemSchema);
 
-app.post("/delete", function(req,res){
-
+app.post("/delete", function(req, res) {
   const id = req.body.checkbox;
-  Work.findByIdAndRemove({_id : id}, function(err){
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("item deleted");
-    }
-  });
-  res.redirect("/work");
-})
+  const listName = req.body.listName;
+  if (listName === "Work") {
+    Work.findByIdAndRemove({
+      _id: id
+    }, function(err) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("item deleted");
+      }
+    });
+    res.redirect("/work");
+  } else {
+    const query = {listName: listName};
+    const update = {$pull: {itemList: {_id : id}}};
+    List.findOneAndUpdate(query, update, {useFindAndModify: false}, function(err,result) {
+      if (!err) {
+        res.redirect("/" + listName);
+      };
+    });
+
+  }
+});
 
 
 
@@ -139,9 +170,22 @@ app.post("/", function(req, res) {
     });
     res.redirect("/work");
   } else {
-    item = req.body.newItem;
-    items.push(item);
-    res.redirect("/");
+    const customListName = req.body.list;
+    console.log(customListName);
+    const item = new Item({
+      name: req.body.newItem
+    });
+    List.findOne({
+      listName: customListName
+    }, function(err, result) {
+      if (!err) {
+        if (!result) {} else {
+          result.itemList.push(item);
+          result.save();
+        }
+      }
+    });
+    res.redirect("/" + customListName);
   }
 });
 

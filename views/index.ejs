@@ -16,9 +16,8 @@
     <% itemsOfList.forEach(function(item){ %>
     <form class="" action="/delete" method="post">
       <div class="item">
-        <input name="listName" type="hidden" value="<%= listTitle %>">
         <input name= "checkbox" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()">
-        <p name = "todo-item"> <%= item.name %> </p>
+        <p name = "todo-item"> <%= item %> </p>
       </div>
     </form>
 
