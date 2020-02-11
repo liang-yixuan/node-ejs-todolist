@@ -48,24 +48,6 @@
     </div>
   </div>
 
-  <div class="box">
-    <% itemsOfList.forEach(function(item){ %>
-      <form action="/deleteList" method="post">
-        <div class="item">
-          <!-- <input name="checkbox" type="checkbox" value="<%=item._id%>" onchange="this.form.submit()"> -->
-          <p class="list-p" name="todo-item" onchange="this.form.submit()"> <%= item %> </p>
-          <button type="submit" name="delList" value="<%=item%>">-</button>
-        </div>
-      </form>
-      <% }) %>
-
-      <form class="item" action="/newList" method="post">
-        <input type="text" name="newList" placeholder="New List" autocomplete="off">
-        <button type="submit" name="list" value="<%= listTitle %>">+</button>
-      </form>
-    </div>
-
-  </div>
 </body>
 
 </html>
